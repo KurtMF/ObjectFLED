@@ -78,8 +78,7 @@ level).
 
 When taking advantage of parallel inputs into an LED device, each pin is assumed to drive the same
 number of LEDs (or rows or planes).  When you define your ObjectFLED object, provide an ordered pin 
-list which matches the order in which the pins connect to the device.  ObjectFLED will output segments 
-from your display buffer to those pins in the order you specify.  
+list which matches the order in which the pins connect to the device.  ObjectFLED will output segments from your display buffer to those pins in the order you specify.  
 
 Individual LEDs come with various formats for RGB color order, data signal clock frequency, and 
 pulse timing specs.  ObjectFLED defaults will work for popular RGB-order LEDs with 800KHz clock and
