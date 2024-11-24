@@ -189,7 +189,7 @@ Like brightness, this is applied by show() to frame buffer, not to your drawing 
 These are not part of display objects, call them without object specifier.  Unlike brightness and 
 balance, these functions operate on your drawing buffer.
 
-* void fadeToColorBy(void* leds, uint16_t count, uint32_t color, uint8_t fadeAmt);
+### void fadeToColorBy(void* leds, uint16_t count, uint32_t color, uint8_t fadeAmt);
 
 Fades drawing array towards the background color by amount.  It is used just like FastLED's 
 fadeToBlackBy().
@@ -198,7 +198,7 @@ fadeToBlackBy().
 
     fadeToColorBy( myCube, 16*16*16, 0xFF8000, 20 );      //fades towards orange by 20/255ths
 
-* void drawSquare(void* leds, uint16_t planeY, uint16_t planeX, int yCorner, int xCorner, uint size, 
+### void drawSquare(void* leds, uint16_t planeY, uint16_t planeX, int yCorner, int xCorner, uint size, 
     uint32_t color);
 
 Safely draws box in given RGB color on LED plane. cornerY and cornerX specify the lower left 
