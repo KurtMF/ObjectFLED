@@ -198,8 +198,7 @@ fadeToBlackBy().
 
     fadeToColorBy( myCube, 16*16*16, 0xFF8000, 20 );      //fades towards orange by 20/255ths
 
-### void drawSquare(void* leds, uint16_t planeY, uint16_t planeX, int yCorner, int xCorner, uint size, 
-    uint32_t color);
+### void drawSquare(void* leds, uint16_t planeY, uint16_t planeX, int yCorner, int xCorner, uint size, uint32_t color);
 
 Safely draws box in given RGB color on LED plane. cornerY and cornerX specify the lower left 
 corner of the box.  It is safe to specify -cornerY, -cornerX, and safe to draw a box which only 
