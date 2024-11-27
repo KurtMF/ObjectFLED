@@ -53,10 +53,23 @@ GOIO9List = { 2, 3, 4, 5, 29, 33, 48, 49, 50, 51, 52, 53, 54 }  //6 top, 7 botto
 * FrameBuffer no longer passed in, constructor now creates buffer; destructor added
 * Added support for per-object setting of OC factor, TH+TL, T0H, T1H, and LATCH_DELAY in begin function
 */
+
 #ifndef __IMXRT1062__
 #error Only Teensy 4.x supported.
 #else
+
+
+#include <string.h>
+
 #include "ObjectFLED.h"
+
+#ifndef MIN
+#define MIN(a,b) ((a)<(b)?(a):(b))
+#endif
+
+#ifndef MAX
+#define MAX(a,b) ((a)>(b)?(a):(b))
+#endif
 
 volatile uint32_t framebuffer_index = 0;		//isr()
 uint8_t* ObjectFLED::frameBuffer;				//isr()
@@ -273,16 +286,16 @@ void fillbits(uint32_t *dest, const uint8_t *pixels, int n, uint32_t mask) {
 }
 
 
-void ObjectFLED::genFrameBuffer(uint serp) {
-	uint j = 0;
+void ObjectFLED::genFrameBuffer(uint32_t serp) {
+	uint32_t j = 0;
 	int jChange = -3;
 	if (serp == 0) {	// use faster loops if no serp
 		switch (params & 0x3F) {
-		case CORDER_RGBW:		// R,G,B = R,G,B - min(R,G,B); W = min(R,G,B)
+		case CORDER_RGBW:		// R,G,B = R,G,B - MIN(R,G,B); W = MIN(R,G,B)
 			for (uint16_t i = 0; i < (numbytes * numpins); i += 4) {
-				uint8_t minRGB = min(*((uint8_t*)drawBuffer + j) * rLevel / 65025, \
+				uint8_t minRGB = MIN(*((uint8_t*)drawBuffer + j) * rLevel / 65025, \
 					*((uint8_t*)drawBuffer + j + 1) * rLevel / 65025);
-				minRGB = min(minRGB, *((uint8_t*)drawBuffer + j + 2) * rLevel / 65025);
+				minRGB = MIN(minRGB, *((uint8_t*)drawBuffer + j + 2) * rLevel / 65025);
 				*(frameBuffer + i) = *((uint8_t*)drawBuffer + j) * rLevel / 65025 - minRGB;
 				*(frameBuffer + i + 1) = *((uint8_t*)drawBuffer + j + 1) * gLevel / 65025 - minRGB;
 				*(frameBuffer + i + 2) = *((uint8_t*)drawBuffer + j + 2) * bLevel / 65025 - minRGB;
@@ -317,11 +330,11 @@ void ObjectFLED::genFrameBuffer(uint serp) {
 		}	// switch()
 	} else {	//serpentine
 		switch (params & 0x3F) {
-		case CORDER_RGBW:		// R,G,B = R,G,B - min(R,G,B); W = min(R,G,B)
+		case CORDER_RGBW:		// R,G,B = R,G,B - MIN(R,G,B); W = MIN(R,G,B)
 			for (uint16_t i = 0; i < (numbytes * numpins); i += 4) {
-				uint8_t minRGB = min(*((uint8_t*)drawBuffer + j) * rLevel / 65025, \
+				uint8_t minRGB = MIN(*((uint8_t*)drawBuffer + j) * rLevel / 65025, \
 					* ((uint8_t*)drawBuffer + j + 1) * rLevel / 65025);
-				minRGB = min(minRGB, *((uint8_t*)drawBuffer + j + 2) * rLevel / 65025);
+				minRGB = MIN(minRGB, *((uint8_t*)drawBuffer + j + 2) * rLevel / 65025);
 				if (i % (serp * 4) == 0) {
 					if (jChange < 0) { j = i / 4 * 3; jChange = 3; }
 					else { j = (i / 4 + serp - 1) * 3; jChange = -3; }
@@ -544,7 +557,7 @@ void ObjectFLED::setBalance(uint32_t balMask) {
 
 //Fades CRGB array towards the background color by amount.
 void fadeToColorBy(void* leds, uint16_t count, uint32_t color, uint8_t fadeAmt) {
-	for (uint x = 0; x < count * 3; x += 3) {
+	for (uint32_t x = 0; x < count * 3; x += 3) {
 		//fade red
 		*((uint8_t*)leds + x) = ((  *((uint8_t*)leds + x)  * (1 + (255 - fadeAmt))) >> 8) + \
 			((  ((color >> 16) & 0xFF)   * (1 + fadeAmt)) >> 8);
@@ -559,7 +572,7 @@ void fadeToColorBy(void* leds, uint16_t count, uint32_t color, uint8_t fadeAmt) 
 
 
 // Safely draws box even if partially offscreen on 2D CRGB array
-void drawSquare(void* leds, uint16_t planeY, uint16_t planeX, int yCorner, int xCorner, uint size, uint32_t color) {
+void drawSquare(void* leds, uint16_t planeY, uint16_t planeX, int yCorner, int xCorner, uint32_t size, uint32_t color) {
 	if (size != 0) { size--; }
 	else { return; }
 	for (int x = xCorner; x <= xCorner + (int)size; x++) {

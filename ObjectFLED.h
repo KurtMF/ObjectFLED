@@ -38,8 +38,23 @@
 #endif
 #ifndef ObjectFLED_h
 #define ObjectFLED_h
-#include <Arduino.h>
+// #include <Arduino.h>
 #include "DMAChannel.h"
+#include "core_pins.h"
+
+// for DMAMEM
+#include "pgmspace.h"
+
+// for NUM_DIGITAL_PINS and NUM_DIGITAL_PINS
+#include "pins_arduino.h"
+
+#if !defined(NUM_DIGITAL_PINS) && !defined(USING_ARDUINO_FOR_TEENSY)
+#define USING_ARDUINO_FOR_TEENSY 0
+#else
+#define USING_ARDUINO_FOR_TEENSY 1
+#endif
+
+
 
 // Ordinary RGB data is converted to GPIO bitmasks on-the-fly using
 // a transmit buffer sized for 2 DMA transfers.  The larger this setting,
@@ -122,7 +137,7 @@ public:
 private:
 	static void isr(void);
 
-	void genFrameBuffer(uint);
+	void genFrameBuffer(uint32_t);
 
 	static uint8_t* frameBuffer;					//isr()
 	static uint32_t numbytes;						//isr()
@@ -170,6 +185,6 @@ void fadeToColorBy(void*, uint16_t, uint32_t, uint8_t);
 //drawSquare(RGB_Array, LED_Rows, LED_Cols, Y_Corner, X_Corner, square_Size)
 //Draws square in a 2D RGB array with lower left corner at (Y_Corner, X_Corner).
 //Safe to specify -Y, -X corner, safe to draw a box which partially fits on LED plane.
-void drawSquare(void*, uint16_t, uint16_t, int, int, uint, uint32_t);
+void drawSquare(void*, uint16_t, uint16_t, int, int, uint32_t, uint32_t);
 
 #endif
