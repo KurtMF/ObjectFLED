@@ -57,10 +57,6 @@ GOIO9List = { 2, 3, 4, 5, 29, 33, 48, 49, 50, 51, 52, 53, 54 }  //6 top, 7 botto
 #ifndef __IMXRT1062__
 #error Only Teensy 4.x supported.
 #else
-
-
-#include <string.h>
-
 #include "ObjectFLED.h"
 
 #ifndef MIN

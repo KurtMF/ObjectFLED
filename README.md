@@ -123,16 +123,16 @@ object.  Ex.-
 Called once in setup for the display object
 
 // Default timing 800KHz clock, 75uS latch delay  
-void ObjectFLED::begin(void);                
+begin(void);                
 
 // Overclock default timing by the given factor  
-void ObjectFLED::begin(float OCF);           
+begin(float OCF);           
 
 // Overclock default timing and overrde default latch delay  
-void ObjectFLED::begin(float OCF, uint16_t latchDelay);        
+begin(float OCF, uint16_t latchDelay);        
 
 // Fully specify output waveform timing.  NOTE: Given period, t0h, t1h are divided by given OCF.  
-void ObjectFLED::begin(float OCF, uint16_t period, uint16_t t0h, uint16_t t1h, uint16_t latchDelay);
+begin(float OCF, uint16_t period, uint16_t t0h, uint16_t t1h, uint16_t latchDelay);
 
 - OCF = Overclocking factor multiples the clock rate (by dividing the pulse width values below)
 - period = nS time for duration of a full LED data pulse (from LED datasheet) NOTE: For 800KHz clock, 
@@ -168,9 +168,9 @@ See MAIN BENEFITS above for details.
 Brightness values 0-255.  Brightness is applied by show() to frame buffer, not your 
 drawing buffer.
 
-* void setBrightness(uint8_t)
+* setBrightness(uint8_t);
 
-* uint8_t getBrightness() { return brightness; }
+* getBrightness() { return uint8_t brightness; }
 
 
 ### setBalance(), getBalance() FUNCTIONS
@@ -178,9 +178,9 @@ drawing buffer.
 Color Balance is 3-byte number in RGB order.  Each byte is a brightness value for that color.
 Like brightness, this is applied by show() to frame buffer, not to your drawing buffer.
 
-* void setBalance(uint32_t);
+* setBalance(uint32_t);
 
-* uint32_t getBalance() { return colorBalance; }
+* getBalance() { return uint32_t colorBalance; }
 
 
 ## ACCESSORY FUNCTIONS
@@ -188,7 +188,7 @@ Like brightness, this is applied by show() to frame buffer, not to your drawing 
 These are not part of display objects, call them without object specifier.  Unlike brightness and 
 balance, these functions operate on your drawing buffer.
 
-### void fadeToColorBy(void* leds, uint16_t count, uint32_t color, uint8_t fadeAmt);
+### fadeToColorBy(void* leds, uint16_t count, uint32_t color, uint8_t fadeAmt);
 
 Fades drawing array towards the background color by amount.  It is used just like FastLED's 
 fadeToBlackBy().
@@ -197,7 +197,7 @@ fadeToBlackBy().
 
     fadeToColorBy( myCube, 16*16*16, 0xFF8000, 20 );      //fades towards orange by 20/255ths
 
-### void drawSquare(void* leds, uint16_t planeY, uint16_t planeX, int yCorner, int xCorner, uint size, uint32_t color);
+### drawSquare(void* leds, uint16_t planeY, uint16_t planeX, int yCorner, int xCorner, uint size, uint32_t color);
 
 Safely draws box in given RGB color on LED plane. cornerY and cornerX specify the lower left 
 corner of the box.  It is safe to specify -cornerY, -cornerX, and safe to draw a box which only 

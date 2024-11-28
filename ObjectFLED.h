@@ -38,23 +38,8 @@
 #endif
 #ifndef ObjectFLED_h
 #define ObjectFLED_h
-// #include <Arduino.h>
+#include <WProgram.h>
 #include "DMAChannel.h"
-#include "core_pins.h"
-
-// for DMAMEM
-#include "pgmspace.h"
-
-// for NUM_DIGITAL_PINS and NUM_DIGITAL_PINS
-#include "pins_arduino.h"
-
-#if !defined(NUM_DIGITAL_PINS) && !defined(USING_ARDUINO_FOR_TEENSY)
-#define USING_ARDUINO_FOR_TEENSY 0
-#else
-#define USING_ARDUINO_FOR_TEENSY 1
-#endif
-
-
 
 // Ordinary RGB data is converted to GPIO bitmasks on-the-fly using
 // a transmit buffer sized for 2 DMA transfers.  The larger this setting,
