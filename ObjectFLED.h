@@ -41,11 +41,6 @@
 #include <WProgram.h>
 #include "DMAChannel.h"
 
-//Experimentally found DSE=3, SPEED=0 gave best LED overclocking
-//boot defaults DSE=6, SPEED=2.
-#define OUTPUT_PAD_DSE		3		//Legal values 0-7
-#define OUTPUT_PAD_SPEED	0		//Legal values 0-3
-
 // Ordinary RGB data is converted to GPIO bitmasks on-the-fly using
 // a transmit buffer sized for 2 DMA transfers.  The larger this setting,
 // the more interrupt latency OctoWS2811 can tolerate, but the transmit
@@ -153,8 +148,8 @@ private:
 	uint8_t serpNumber;
 	float OC_FACTOR = 1.0;					//used to reduce period of LED output
 	uint16_t TH_TL = 1250;					//nS- period of LED output
-	uint16_t T0H = TH_TL / 3;				//nS- duration of T0H
-	uint16_t T1H = TH_TL * 2 / 3;			//nS- duration of T1H
+	uint16_t T0H = TH_TL / 3.0;				//nS- duration of T0H
+	uint16_t T1H = TH_TL * 2.0 / 3.0;		//nS- duration of T1H
 	uint16_t LATCH_DELAY = 75;				//uS time to hold output low for LED latch.
 
 	//for show context switch
