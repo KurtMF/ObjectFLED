@@ -154,6 +154,10 @@ void ObjectFLED::begin(void) {
 		pin_offset[i] = offset;		//static/isr
 		uint32_t mask = 1 << bit;	//mask32 = bit set @position in GPIO DR
 		bitmask[offset] |= mask;	//bitmask32[0..3] = collective pin bit masks for each GPIO DR
+		//bit7:6 SPEED; bit 5:3 DSE; bit0 SRE  (default SPEED = 0b10; def. DSE = 0b110)
+		*portControlRegister(pin) &= ~0xF9;		//clear SPEED, DSE, SRE
+		*portControlRegister(pin) |= ((OUTPUT_PAD_SPEED & 0x3) << 6) | \
+			((OUTPUT_PAD_DSE & 0x7) << 3);	//DSE = 0b011 for LED overclock
 		//clear pin bit in IOMUX_GPR26 to map GPIO6-9 to GPIO1-4 for DMA 
 		*(&IOMUXC_GPR_GPR26 + offset) &= ~mask;		
 		*standard_gpio_addr(portModeRegister(pin)) |= mask;		//GDIR? bit flag set output mode
