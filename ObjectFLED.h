@@ -58,9 +58,9 @@
 #define CORDER_RGB	0	//* WS2811, YF923
 #define CORDER_RBG	1
 #define CORDER_GRB	2	//* WS2811B, Most LED strips are wired this way
-#define CORDER_GBR	3
+#define CORDER_GBR	3	//*
 #define CORDER_BRG	4	//* Adafruit Product ID: 5984 As of November 5, 2024 - this strand has different 'internal' color ordering. It's now BRG not RGB,
-#define CORDER_BGR	5	// Adafruit Dotstar LEDs SK9822 uses this CO but they use inverted start/stop bits
+#define CORDER_BGR	5	//* Adafruit Dotstar LEDs SK9822 uses this CO but they use inverted start/stop bits
 #define CORDER_RGBW	6	//* Popular
 #define CORDER_RBGW	7
 #define CORDER_GRBW	8

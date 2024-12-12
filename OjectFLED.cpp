@@ -52,6 +52,7 @@ GOIO9List = { 2, 3, 4, 5, 29, 33, 48, 49, 50, 51, 52, 53, 54 }  //6 top, 7 botto
 * Added setBrightness(), setBalance()
 * FrameBuffer no longer passed in, constructor now creates buffer; destructor added
 * Added support for per-object setting of OC factor, TH+TL, T0H, T1H, and LATCH_DELAY in begin function
+* Set DSE=3, SPEED=0, SRE=0 on output pins per experiment & PJRC forum guidance
 */
 
 #ifndef __IMXRT1062__
@@ -303,6 +304,22 @@ void ObjectFLED::genFrameBuffer(uint32_t serp) {
 				j += 3;
 			}	//for(leds in drawbuffer)
 			break;
+		case CORDER_GBR:
+			for (uint16_t i = 0; i < (numbytes * numpins); i += 3) {
+				*(frameBuffer + i + 2) = *((uint8_t*)drawBuffer + j) * rLevel / 65025;
+				*(frameBuffer + i) = *((uint8_t*)drawBuffer + j + 1) * gLevel / 65025;
+				*(frameBuffer + i + 1) = *((uint8_t*)drawBuffer + j + 2) * bLevel / 65025;
+				j += 3;
+			}	//for(leds in drawbuffer)
+			break;
+		case CORDER_BGR:
+			for (uint16_t i = 0; i < (numbytes * numpins); i += 3) {
+				*(frameBuffer + i + 2) = *((uint8_t*)drawBuffer + j) * rLevel / 65025;
+				*(frameBuffer + i + 1) = *((uint8_t*)drawBuffer + j + 1) * gLevel / 65025;
+				*(frameBuffer + i) = *((uint8_t*)drawBuffer + j + 2) * bLevel / 65025;
+				j += 3;
+			}	//for(leds in drawbuffer)
+			break;
 		case CORDER_BRG:
 			for (uint16_t i = 0; i < (numbytes * numpins); i += 3) {
 				*(frameBuffer + i + 1) = *((uint8_t*)drawBuffer + j) * rLevel / 65025;
@@ -344,6 +361,30 @@ void ObjectFLED::genFrameBuffer(uint32_t serp) {
 				*(frameBuffer + i + 2) = *((uint8_t*)drawBuffer + j + 2) * bLevel / 65025 - minRGB;
 				*(frameBuffer + i + 3) = minRGB;
 				j += jChange;
+			}	//for(leds in drawbuffer)
+			break;
+		case CORDER_GBR:
+			for (uint16_t i = 0; i < (numbytes * numpins); i += 3) {
+				if (i % (serp * 3) == 0) {
+					if (jChange < 0) { j = i; jChange = 3; }
+					else { j = i + (serp - 1) * 3; jChange = -3; }
+				}
+				*(frameBuffer + i + 2) = *((uint8_t*)drawBuffer + j) * rLevel / 65025;
+				*(frameBuffer + i) = *((uint8_t*)drawBuffer + j + 1) * gLevel / 65025;
+				*(frameBuffer + i + 1) = *((uint8_t*)drawBuffer + j + 2) * bLevel / 65025;
+				j += 3;
+			}	//for(leds in drawbuffer)
+			break;
+		case CORDER_BGR:
+			for (uint16_t i = 0; i < (numbytes * numpins); i += 3) {
+				if (i % (serp * 3) == 0) {
+					if (jChange < 0) { j = i; jChange = 3; }
+					else { j = i + (serp - 1) * 3; jChange = -3; }
+				}
+				*(frameBuffer + i + 2) = *((uint8_t*)drawBuffer + j) * rLevel / 65025;
+				*(frameBuffer + i + 1) = *((uint8_t*)drawBuffer + j + 1) * gLevel / 65025;
+				*(frameBuffer + i) = *((uint8_t*)drawBuffer + j + 2) * bLevel / 65025;
+				j += 3;
 			}	//for(leds in drawbuffer)
 			break;
 		case CORDER_BRG:
@@ -541,17 +582,17 @@ int ObjectFLED::busy(void)
 
 void ObjectFLED::setBrightness(uint8_t brightLevel) {
 	brightness = brightLevel;
-	rLevel = (brightness + 1) * (colorBalance >> 16);
-	gLevel = (brightness + 1) * ((colorBalance >> 8) & 0xFF);
-	bLevel = (brightness + 1) * (colorBalance & 0xFF);
+	rLevel = brightness * (colorBalance >> 16);
+	gLevel = brightness * ((colorBalance >> 8) & 0xFF);
+	bLevel = brightness * (colorBalance & 0xFF);
 	}
 
 
 void ObjectFLED::setBalance(uint32_t balMask) {
 	colorBalance = balMask & 0xFFFFFF;
-	rLevel = (brightness + 1) * (colorBalance >> 16);
-	gLevel = (brightness + 1) * ((colorBalance >> 8) & 0xFF);
-	bLevel = (brightness + 1) * (colorBalance & 0xFF);
+	rLevel = brightness * (colorBalance >> 16);
+	gLevel = brightness * ((colorBalance >> 8) & 0xFF);
+	bLevel = brightness * (colorBalance & 0xFF);
 }
 
 
