@@ -2,7 +2,7 @@
 * Changed default LED waveform timing to fix conflict with Teensy Audio library and possibly other DMA-enabled apps. 
 More relaxed default timing allows ObjectFLED to work out-of-the-box with more LED chips as well.
 * Eliminated using both overclock factor and pulse timing specs in same .begin() function call.  Either specify OC factor, 
-or pulse timing values, but not both.  See mouseover help or OctoFLED.h for the updated .begin() signatures.  Only those 
+or pulse timing values, but not both.  See mouseover help or ObjectFLED.h for the updated .begin() signatures.  Only those 
 using the full form of begin(OC_Factor, THTL, T0H, T1H, Latch_Delay) will need to update their .begin() call.
 * Changed how OC factor is applied to waveform timing.  Originally, OC factor was applied to equally shrink TH_TL, T0H, 
 and T1H.  Now, OC factor applies to TH_TL and T0H equally, but only reduces T1H by 1/3 of the amount.  This is because 
