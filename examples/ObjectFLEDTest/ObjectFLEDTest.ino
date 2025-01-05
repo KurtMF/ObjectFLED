@@ -15,8 +15,6 @@ const int PIX_PER_ROW = 16,
           NUM_PLANES = 16,
           NUM_CHANNELS = 16,
           COLOR_ORDER = RGB,
-          //LED baud * 3 bits/LED byte = Serial baud; 2.4 MHz serial,  3.6 passed testing
-          LED_SERIAL_BAUD = 800 * 1.8,  //1200,         //SerialFLED in kHz  
           STD_OUT_BAUD = 100000;
 const CRGB background = 0x505000;
 byte pinList[NUM_CHANNELS] = {1, 8, 14, 17, 24, 29, 20, 0, 15, 16, 18, 19, 21, 22, 23, 25};
@@ -49,7 +47,7 @@ void setup() {
 //  FastLED.setCorrection(0xB0E0FF);
   fill_solid(blankLeds[0][0], 7*8*8, 0x0);
   fill_solid(testCube[0][0], NUM_PLANES * NUM_ROWS * PIX_PER_ROW, background);
-  leds.begin(1.6, 72);    //1.6 ocervlock factor, 72uS LED latch delay
+  leds.begin();         // Use alternate forms of this function to overclock
   leds.setBrightness(6);
   leds.setBalance(0xDAE0FF);
 
@@ -82,7 +80,7 @@ void loop() {
   leds.show();
   leds.show();
   stopT = micros();
-  Serial.printf("LEDs/channel:  %d   Serial avg/20 time:  %d uS  %f fps\n", \
+  Serial.printf("LEDs/channel:  %d   ObjectFLED avg/20 time:  %d uS  %f fps\n", \
                     PIX_PER_ROW*NUM_ROWS*NUM_PLANES/NUM_CHANNELS, 
                   (stopT - startT) / 20, 20000000.0 / (stopT - startT));
   while (Serial.read() == -1);
@@ -90,7 +88,7 @@ void loop() {
   startT = micros();
   leds.show();
   stopT = micros();
-  Serial.printf("LEDs/channel:  %d   Serial 1 frame time:  %d uS  %f fps\n", \
+  Serial.printf("LEDs/channel:  %d   ObjectFLED 1 frame time:  %d uS  %f fps\n", \
                     PIX_PER_ROW*NUM_ROWS*NUM_PLANES/NUM_CHANNELS, 
                   (stopT - startT), 1000000.0 / (stopT - startT));
   while (Serial.read() == -1);
@@ -121,7 +119,7 @@ return;
   FastLED.show();
   FastLED.show();
   stopT = micros();
-  Serial.printf("LEDs/channel:  %d   FLED avg/20 time:  %d uS  %f fps\n", \
+  Serial.printf("LEDs/channel:  %d   FastLED avg/20 time:  %d uS  %f fps\n", \
                     PIX_PER_ROW*NUM_ROWS*NUM_PLANES/NUM_CHANNELS, 
                   (stopT - startT) / 20, 20000000.0 / (stopT - startT));
  //Serial.printf("CPU temp:   %.1f C   %.1f F\n", tempmonGetTemp(), tempmonGetTemp() * 9.0 / 5.0 + 32);
@@ -130,7 +128,7 @@ return;
   startT = micros();
   FastLED.show();
   stopT = micros();
-  Serial.printf("LEDs/channel:  %d   FLED 1 frame time:  %d uS  %f fps\n", \
+  Serial.printf("LEDs/channel:  %d   FastLED 1 frame time:  %d uS  %f fps\n", \
                     PIX_PER_ROW*NUM_ROWS*NUM_PLANES/NUM_CHANNELS, 
                   (stopT - startT), 1000000.0 / (stopT - startT));
   while (Serial.read() == -1);

@@ -94,21 +94,24 @@ public:
 	ObjectFLED(uint16_t numLEDs, void* drawBuf, uint8_t config, uint8_t numPins, const uint8_t* pinList, \
 				uint8_t serpentine = 0);
 
-	~ObjectFLED() { delete frameBuffer; }
+	~ObjectFLED() { 
+		// Wait for prior xmission to end, don't need to wait for latch time before deleting buffer
+		while (micros() - update_begin_micros < numbytes * 8 * TH_TL / OC_FACTOR / 1000 + 5);
+		delete frameBuffer; 
+	}
 
-	//begin() - Use defalut LED timing: 1.0 OC Factor, 1250 nS CLK (=800 KHz), 417 nS T0H, 834 nS T1H, 70 uS LED Latch Delay.
+	//begin() - Use defalut LED timing: 1.0 OC Factor, 1250 nS CLK (=800 KHz), 300 nS T0H, 750 nS T1H, 300 uS LED Latch Delay.
 	void begin(void);
 
-	//begin(LED_Overclock_Factor) - divides default 1250 nS LED CLK (=800 KHz), 417 nS T0H, 834 nS T1H.
-	void begin(float);
+	//begin(LED_Latch_Delay_uS) - sets the LED Latch Delay.
+	void begin(uint16_t);
 
 	//begin(LED_Overclock_Factor, LED_Latch_Delay_uS) - divides default 1250 nS LED CLK (=800 KHz), 
-	// 417 nS T0H, 834 nS T1H; and sets the LED Latch Delay.
-	void begin(float, uint16_t);
+	// 300 nS T0H, 750 nS T1H; and optionally sets the LED Latch Delay.
+	void begin(double, uint16_t = 300);
 
-	//begin(LED_Overclock_Factor, LED_CLK_nS, LED_T0H_nS, LED_T1H_nS, LED_Latch_Delay_uS) - 
-	//specifies full LED timing.  Values given for CLK, T0H, T1H are divided by OC Factor.
-	void begin(float, uint16_t, uint16_t, uint16_t, uint16_t);
+	//begin(LED_CLK_nS, LED_T0H_nS, LED_T1H_nS, LED_Latch_Delay_uS) - specifies full LED waveform timing.
+	void begin(uint16_t, uint16_t, uint16_t, uint16_t = 300);
 
 	void show(void);
 
@@ -151,11 +154,11 @@ private:
 	uint8_t pinlist[NUM_DIGITAL_PINS];
 	uint16_t comp1load[3];
 	uint8_t serpNumber;
-	float OC_FACTOR = 1.0;					//used to reduce period of LED output
-	uint16_t TH_TL = 1250;					//nS- period of LED output
-	uint16_t T0H = TH_TL / 3;				//nS- duration of T0H
-	uint16_t T1H = TH_TL * 2 / 3;			//nS- duration of T1H
-	uint16_t LATCH_DELAY = 75;				//uS time to hold output low for LED latch.
+	float OC_FACTOR = 1.0;			//used to reduce period of LED output
+	uint16_t TH_TL = 1250;			//nS- period of LED output
+	uint16_t T0H = 300;				//nS- duration of T0H
+	uint16_t T1H = 750;				//nS- duration of T1H
+	uint16_t LATCH_DELAY = 300;		//uS time to hold output low for LED latch.
 
 	//for show context switch
 	uint32_t bitmaskLocal[4];

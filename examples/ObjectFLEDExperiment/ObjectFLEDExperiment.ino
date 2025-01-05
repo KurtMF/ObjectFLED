@@ -58,7 +58,7 @@ void setup() {
 
   //"electron orbit" around 3 4x4 planes driven by 3 pins
   //1.68 OC factor with these timing values are max OC for YF923's I found posing as WS2812B's
-  electron.begin(1.68, 1250, 420, 840, 72);     
+  electron.begin(1.6, 72);     
   electron.setBrightness(brightness);
   electron.setBalance(0xdae0ff);
   fill_solid(electronLED[0][0], NUM_LEDS, background);

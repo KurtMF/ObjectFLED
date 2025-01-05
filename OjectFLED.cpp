@@ -53,6 +53,8 @@ GOIO9List = { 2, 3, 4, 5, 29, 33, 48, 49, 50, 51, 52, 53, 54 }  //6 top, 7 botto
 * FrameBuffer no longer passed in, constructor now creates buffer; destructor added
 * Added support for per-object setting of OC factor, TH+TL, T0H, T1H, and LATCH_DELAY in begin function
 * Set DSE=3, SPEED=0, SRE=0 on output pins per experiment & PJRC forum guidance
+* New default values for TH_TL, T0H, T1H, LATCH_DELAY to work with Audio lib and more LED types
+* Added wait for prior xmission to complete in destructor
 */
 
 #ifndef __IMXRT1062__
@@ -114,21 +116,20 @@ static volatile uint32_t *standard_gpio_addr(volatile uint32_t *fastgpio) {
 }
 
 
-void ObjectFLED::begin(float OCF) {
-	OC_FACTOR = OCF;
-	begin();
-}
-
-
-void ObjectFLED::begin(float OCF, uint16_t latchDelay) {
-	OC_FACTOR = OCF;
+void ObjectFLED::begin(uint16_t latchDelay) {
 	LATCH_DELAY = latchDelay;
 	begin();
 }
 
 
-void ObjectFLED::begin(float OCF, uint16_t period, uint16_t t0h, uint16_t t1h, uint16_t latchDelay) {
-	OC_FACTOR = OCF;
+void ObjectFLED::begin(double OCF, uint16_t latchDelay) {
+	OC_FACTOR = (float)OCF;
+	LATCH_DELAY = latchDelay;
+	begin();
+}
+
+
+void ObjectFLED::begin(uint16_t period, uint16_t t0h, uint16_t t1h, uint16_t latchDelay) {
 	TH_TL = period;
 	T0H = t0h;
 	T1H = t1h;
@@ -173,7 +174,7 @@ void ObjectFLED::begin(void) {
 	// Set up 3 timers to create waveform timing events
 	comp1load[0] = (uint16_t)((float)F_BUS_ACTUAL / 1000000000.0 * (float)TH_TL / OC_FACTOR );
 	comp1load[1] = (uint16_t)((float)F_BUS_ACTUAL / 1000000000.0 * (float)T0H / OC_FACTOR );
-	comp1load[2] = (uint16_t)((float)F_BUS_ACTUAL / 1000000000.0 * (float)T1H / OC_FACTOR );
+	comp1load[2] = (uint16_t)((float)F_BUS_ACTUAL / 1000000000.0 * (float)T1H / (1.0 + ((OC_FACTOR - 1.0)/3)) );
 	TMR4_ENBL &= ~7;
 	TMR4_SCTRL0 = TMR_SCTRL_OEN | TMR_SCTRL_FORCE | TMR_SCTRL_MSTR;
 	TMR4_CSCTRL0 = TMR_CSCTRL_CL1(1) | TMR_CSCTRL_TCF1EN;
