@@ -6,7 +6,7 @@ or pulse timing values, but not both.  See mouseover help or ObjectFLED.h for th
 using the full form of begin(OC_Factor, THTL, T0H, T1H, Latch_Delay) will need to update their .begin() call.
 * Changed how OC factor is applied to waveform timing.  Originally, OC factor was applied to equally shrink TH_TL, T0H, 
 and T1H.  Now, OC factor applies to TH_TL and T0H equally, but only reduces T1H by 1/3 of the amount.  This is because 
-LED chips have a fixed threshold for when a H pulse is a 0 or a 1.  This change yeilded slightly better overlockability
+LED chips have a fixed threshold for when a H pulse is a 0 or a 1.  This change yielded slightly better overclockability
 in testing with WS2812B chips._
 
 ### Release 1.0.3
