@@ -71,9 +71,10 @@ impact your project:
 |:----------:|:----------:|:--------------------------------------------------------------------|
 |YES|YES|Explicitly assign pins to 1D arrays for LED strings|
 |NO|YES|Auto-assign ordered pin list to segments of 2D and 3D arrays for LED string collections, planes and cubes|
-|YES|NO|Show, brightness, color balance are global to all LED objects defined in sketch|
-|NO|YES|Show, brightness, color balance are specific to each LED object defined in sketch|
+|YES|NO|Show, brightness, and color balance are global to all LED objects defined in sketch|
+|NO|YES|Show, brightness, and color balance are specific to each LED object defined in sketch|
 |NO|YES|Built-in support for serpentine rows in LED planes|
+|NO|YES|Full control of LED signal waveform timing for overclocking|
 
 2 new sketches were added to the examples directory to illustrate both methods: UsesFastLED.ino and 
 UsesObjectFLED.ino.
@@ -104,8 +105,8 @@ specs from your LED's datasheet.  Specify the color order when you instantiate O
 
 ### ObjectFLED CLASS
 
-ObjectFLED(uint16_t numLEDs, void* drawBuf, uint8_t config, uint8_t numPins, const uint8_t* pinList, 
-    uint8_t serpentine = 0);
+__ObjectFLED(uint16_t numLEDs, void* drawBuf, uint8_t config, uint8_t numPins, const uint8_t* pinList, 
+    uint8_t serpentine = 0);__
 
 - numLEDs = total number of LEDs in the device(s) represented by your drawing buffer
 - drawBuf = drawing array of CRGB or similar format which contains your graphics  NOTE: multi-dimensional 
@@ -136,22 +137,23 @@ object.
 Called once in setup for the display object
 
 // Default timing 800KHz clock, 300 nS T0H, 750 nS T1H, and 300 uS latch delay  
-begin(void);                
+__begin(void);__
 
 // Override the default latch delay  
-begin(uint16_t latchDelay);           
+__begin(uint16_t latchDelay);__
 
 // Overclock default timing and optionally overrde default latch delay  
-begin(double OCF, uint16_t latchDelay = 300);        
+__begin(double OCF, uint16_t latchDelay = 300);__
 
 // Fully specify output waveform timing TH_TL (clk period), T0H, T1H, and optionally Latch Delay  
-begin(uint16_t period, uint16_t t0h, uint16_t t1h, uint16_t latchDelay = 300);
+// Overclocking is achieved by shortening period rather than using OCF  
+__begin(uint16_t period, uint16_t t0h, uint16_t t1h, uint16_t latchDelay = 300);__
 
 - OCF = Overclocking factor multiples the clock rate (by dividing the pulse width values below)
-- period = nS time for duration of a full LED data pulse (from LED datasheet) NOTE: For 800KHz clock, 
-period = 1250nS.  This is the default setting.
-- t0h = nS time for duration of high portion of pulse for LED data 0 (from LED datasheet)
-- t1h = nS time for duration of high portion of pulse for LED data 1 (from LED datasheet)
+- period = nS duration of a full LED data pulse (from LED datasheet) NOTE: For 800KHz clock 
+(default), period = 1250nS.
+- t0h = nS duration of high portion of pulse for LED data 0 (from LED datasheet)
+- t1h = nS duration of high portion of pulse for LED data 1 (from LED datasheet)
 - latchDelay = uS time to hold data low for LEDs to latch color data to DACs (from LED datasheet) 
 
 **Example:**
@@ -183,9 +185,9 @@ update your drawing while the large display is still DMA-transmitting 94% of it'
 Brightness values 0-255.  Brightness is applied by show() to frame buffer, not your 
 drawing buffer.
 
-* setBrightness(uint8_t);
+__setBrightness(uint8_t);__
 
-* uint8_t getBrightness();
+__uint8_t getBrightness();__
 
 
 ### setBalance(), getBalance() FUNCTIONS
@@ -193,9 +195,9 @@ drawing buffer.
 Color Balance is 3-byte number in RGB order.  Each byte is a brightness value for that color.
 Like brightness, this is applied by show() to frame buffer, not to your drawing buffer.
 
-* setBalance(uint32_t);
+__setBalance(uint32_t);__
 
-* uint32_t getBalance();
+__uint32_t getBalance();__
 
 
 ## ACCESSORY FUNCTIONS
@@ -203,7 +205,7 @@ Like brightness, this is applied by show() to frame buffer, not to your drawing 
 These are not part of display objects, call them without object specifier.  Unlike brightness and 
 balance, these functions operate on your drawing buffer.
 
-### fadeToColorBy(void* leds, uint16_t count, uint32_t color, uint8_t fadeAmt);
+__fadeToColorBy(void* leds, uint16_t count, uint32_t color, uint8_t fadeAmt);__
 
 Fades drawing array towards the background color by amount.  It is used just like FastLED's 
 fadeToBlackBy().
@@ -212,7 +214,8 @@ fadeToBlackBy().
 
     fadeToColorBy( myCube, 16*16*16, 0xFF8000, 20 );      //fades towards orange by 20/255ths
 
-### drawSquare(void* leds, uint16_t planeY, uint16_t planeX, int yCorner, int xCorner, uint size, uint32_t color);
+
+__drawSquare(void* leds, uint16_t planeY, uint16_t planeX, int yCorner, int xCorner, uint size, uint32_t color);__
 
 Safely draws box in given RGB color on LED plane. cornerY and cornerX specify the lower left 
 corner of the box.  It is safe to specify -cornerY, -cornerX, and safe to draw a box which only 
