@@ -55,6 +55,9 @@ GOIO9List = { 2, 3, 4, 5, 29, 33, 48, 49, 50, 51, 52, 53, 54 }  //6 top, 7 botto
 * Set DSE=3, SPEED=0, SRE=0 on output pins per experiment & PJRC forum guidance
 * New default values for TH_TL, T0H, T1H, LATCH_DELAY to work with Audio lib and more LED types
 * Added wait for prior xmission to complete in destructor
+* CHANGES by Clément SAILLANT:
+* Added setPixel method
+* Added support for GRBW LED strips
 */
 
 #ifndef __IMXRT1062__
@@ -647,5 +650,14 @@ void drawSquare(void* leds, uint16_t planeY, uint16_t planeX, int yCorner, int x
 		}	//if valid y
 	}	//for y
 } // drawSquare()
+
+void ObjectFLED::setPixel(uint32_t index, uint8_t r, uint8_t g, uint8_t b, uint8_t w) {
+	if (index < numbytes / 4) {
+		frameBuffer[index * 4] = r;
+		frameBuffer[index * 4 + 1] = g;
+		frameBuffer[index * 4 + 2] = b;
+		frameBuffer[index * 4 + 3] = w;
+	}
+}
 
 #endif // __IMXRT1062__
