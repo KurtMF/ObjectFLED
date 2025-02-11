@@ -12,7 +12,7 @@
     copies of the Software, and to permit persons to whom the Software is
     furnished to do so, subject to the following conditions:
 
-    The above copyright notice and this permission notice shall be included in
+    The above copyright notice and this permission shall be included in
     all copies or substantial portions of the Software.
 
 	OctoWS2811 library code was well-studied and substantial portions of it used 
@@ -130,6 +130,7 @@ public:
 	uint32_t getBalance() { return colorBalance; }
 
 	void setPixel(uint32_t index, uint8_t r, uint8_t g, uint8_t b, uint8_t w);
+	void getPixel(uint32_t index, uint8_t &r, uint8_t &g, uint8_t &b, uint8_t &w);
 
 private:
 	static void isr(void);
