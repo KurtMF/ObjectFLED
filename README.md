@@ -22,7 +22,8 @@ of LED devices in a larger LED device (rows of a plane, planes of a cube, spokes
 
   - For Teensy 4.x only.  It may be possible to add other boards if they support DMA driven by
     configurable timers, and ability to map digital pins to a data register which DMA can target.
-  - LED data color formats: RGB, GRB, BRG, GBR, BGR and RGBW
+  - LED data color formats: RGB, GRB, BRG, GBR, BGR and RGBW, BRGW, GBRW, WRGB, etc...
+    
   - Known compatible LED types: SK6812, WS2811, WS2812, WS2812B, WS2812C, WS2812D, WS2812S, WS2813,
 WS2813E, WS2815B
 
@@ -160,7 +161,8 @@ __begin(uint16_t period, uint16_t t0h, uint16_t t1h, uint16_t latchDelay = 300);
 
     dispCube.begin(1.5, 72);        //overclocks by factor 1.5 (1200KHz) and sets 72uS latch delay
     dispVid.begin(1250, 420, 840, 72);   //420nS, 840nS are longer than typical
-
+    nœud Artnet basé sur Teensy 4.1 pour contrôler jusqu'a 50 bandes LED.
+    https://github.com/KomplexKapharnaum/LEDcurtain
 
 ### show() FUNCTION
 
