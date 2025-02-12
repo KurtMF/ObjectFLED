@@ -161,7 +161,8 @@ __begin(uint16_t period, uint16_t t0h, uint16_t t1h, uint16_t latchDelay = 300);
 
     dispCube.begin(1.5, 72);        //overclocks by factor 1.5 (1200KHz) and sets 72uS latch delay
     dispVid.begin(1250, 420, 840, 72);   //420nS, 840nS are longer than typical
-
+    nœud Artnet basé sur Teensy 4.1 pour contrôler jusqu'a 50 bandes LED.
+    https://github.com/KomplexKapharnaum/LEDcurtain
 
 ### show() FUNCTION
 
