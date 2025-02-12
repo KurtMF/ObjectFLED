@@ -1517,6 +1517,7 @@ void drawSquare(void *leds, uint16_t planeY, uint16_t planeX, int yCorner,
   }   // for y
 } // drawSquare()
 
+// set one pixel in CRGB array
 void ObjectFLED::setPixel(uint32_t index, uint8_t r, uint8_t g, uint8_t b,
                           uint8_t w) {
   if (index < numbytes / 4) {
@@ -1527,6 +1528,7 @@ void ObjectFLED::setPixel(uint32_t index, uint8_t r, uint8_t g, uint8_t b,
   }
 }
 
+// get one pixel in CRGB array
 void ObjectFLED::getPixel(uint32_t index, uint8_t &r, uint8_t &g, uint8_t &b,
                           uint8_t &w) {
   if (index < numbytes / 4) {
